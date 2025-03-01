@@ -1,0 +1,71 @@
+Question Link: https://leetcode.com/problems/house-robber/submissions/1559563206/
+
+class Solution {
+    // Memoization Approach
+    public int rob(int[] nums) {
+        int n = nums.length;
+        int[] dp = new int[n];
+        Arrays.fill(dp, -1);
+        return houseRobbery(nums, n -1, dp);
+    }
+
+    public int houseRobbery(int[] nums, int index, int[] dp) {
+
+        if (index < 0) {
+            return 0;
+        }
+
+        if (index == 0) {
+            return nums[index];
+        }
+
+        if (dp[index] != -1) {
+            return dp[index];
+        }
+        
+
+        int yesRobbery = nums[index] + houseRobbery(nums, index - 2, dp);
+        int noRobbery = houseRobbery(nums, index - 1, dp);
+
+        return dp[index] = Math.max(yesRobbery, noRobbery);
+    }
+
+    // Tabulation Approach
+
+    // public int rob(int[] nums) {
+    //     int n = nums.length;
+    //     int[] dp = new int[n];
+    //     Arrays.fill(dp, -1);
+
+    //     dp[0] = nums[0];
+    //     for (int i = 1; i < n; i++) {
+    //         int pick = nums[i];
+    //         if (i > 1) {
+    //             pick = pick + dp[i - 2];
+    //         }
+    //         int nonPick = dp[i - 1];
+    //         dp[i] = Math.max(pick, nonPick);
+    //     }
+
+    //     return dp[n - 1];
+    // }
+
+    // Tabulation Approach with space optimised
+
+    // public int rob(int[] nums) {
+    //     int prev2 = nums[0];
+    //     int prev1 = 0;
+    //     int n = nums.length;
+
+    //     for (int i = 1; i < n; i++) {
+    //         int pick = nums[i];
+    //         if (i > 1) {
+    //             pick = pick + prev1;
+    //         }
+    //         int curr = Math.max(pick, prev2);
+    //         prev1 = prev2;
+    //         prev2 = curr;
+    //     }
+    //     return prev2;
+    // }
+}
