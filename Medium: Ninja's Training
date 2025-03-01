@@ -1,0 +1,41 @@
+Question Link: https://www.geeksforgeeks.org/problems/geeks-training/1
+
+class Solution {
+    public int maximumPoints(int arr[][]) {
+        // code here
+        int m = arr.length;
+        int[][] dp = new int[m][4];
+        
+        for (int i = 0; i < m; i++) {
+            Arrays.fill(dp[i], -1);
+        }
+        
+        return helper(m - 1, 3, arr, dp);
+    }
+    
+    public int helper(int day, int last, int[][] arr, int[][] dp) {
+        if (dp[day][last] != -1) {
+            return dp[day][last];
+        }
+        
+        if (day == 0) {
+            int maxVal = 0;
+            for (int i = 0; i <= 2; i++) {
+                if (i != last) {
+                    maxVal = Math.max(maxVal, arr[day][i]);
+                }
+            }
+            return dp[day][last] = maxVal;
+        }
+        
+        int maxVal = 0;
+        for (int i = 0; i <= 2; i++) {
+            if (i != last) {
+                int val = arr[day][i] + helper(day - 1, i, arr, dp);
+                maxVal = Math.max(maxVal, val);
+            }
+        }
+        
+        return dp[day][last] = maxVal;
+    }
+}
