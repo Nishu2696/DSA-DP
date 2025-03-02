@@ -1,0 +1,77 @@
+Question Link: https://leetcode.com/problems/triangle/
+
+class Solution {
+    // Memoization Approach
+    // public int minimumTotal(List<List<Integer>> triangle) {
+    //     int m = triangle.size();
+    //     int[][] dp = new int[m][m];
+
+    //     for (int i = 0; i < m; i++) {
+    //         Arrays.fill(dp[i], -1);
+    //     }
+
+    //     return countSum(triangle, dp, 0, 0, m -1);
+    // }
+
+    // public int countSum(List<List<Integer>> triangle, int[][] dp, int i, int j, int n) {
+    //     if (dp[i][j] != -1) {
+    //         return dp[i][j];
+    //     }
+
+    //     if (i == n) {
+    //         return triangle.get(i).get(j);
+    //     }
+
+    //     int bottom = triangle.get(i).get(j) + countSum(triangle, dp, i + 1, j, n);
+    //     int bottomRight = triangle.get(i).get(j) + countSum(triangle, dp, i + 1, j + 1, n);
+
+    //     return dp[i][j] = Math.min(bottom, bottomRight);
+    // }
+
+    // Tabulation Approach
+
+    // public int minimumTotal(List<List<Integer>> triangle) {
+    //     int n = triangle.size();
+
+    //     int[][] dp = new int[n][n];
+
+    //     for (int j = 0; j < n; j++) {
+    //         dp[n - 1][j] = triangle.get(n - 1).get(j);
+    //     }
+
+    //     for (int i = n - 2; i >= 0; i--) {
+    //         for (int j = i; j >= 0; j--) {
+    //             int up = triangle.get(i).get(j) + dp[i + 1][j];
+    //             int upLeft = triangle.get(i).get(j) + dp[i + 1][j + 1];
+
+    //             dp[i][j] = Math.min(up, upLeft);
+    //         }
+    //     }
+
+    //     return dp[0][0];
+    // }
+
+    // Tabulation - Space Optimised
+
+    public int minimumTotal(List<List<Integer>> triangle) {
+        int n = triangle.size();
+        int[] front = new int[n];
+        int[] curr = new int[n];
+
+        for (int j = 0; j < n; j++) {
+            front[j] = triangle.get(n - 1).get(j);
+        }
+
+        for (int i = n - 2; i >= 0; i--) {
+            for (int j = i; j >= 0; j--) {
+                int up = triangle.get(i).get(j) + front[j];
+                int upLeft = triangle.get(i).get(j) + front[j + 1];
+
+                curr[j] = Math.min(up, upLeft);
+            }
+            front = curr.clone();
+        }
+
+        return front[0];
+    }
+}
