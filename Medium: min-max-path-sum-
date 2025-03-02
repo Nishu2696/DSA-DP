@@ -1,0 +1,78 @@
+Question Link: https://leetcode.com/problems/minimum-falling-path-sum/
+
+class Solution {
+    // Memoization Technique
+    // public int minFallingPathSum(int[][] matrix) {
+    //     int m = matrix.length;
+    //     int n = matrix[0].length;
+
+    //     int[][] dp =new int[m][n];
+
+    //     for (int i = 0; i < m; i++) {
+    //         Arrays.fill(dp[i], Integer.MAX_VALUE);
+    //     }
+
+    //     int minVal = Integer.MAX_VALUE;
+    //     for (int j = 0; j < n; j++) {
+    //         int ans = countSum(matrix, dp, j, n, m - 1);
+    //         minVal = Math.min(minVal, ans);
+    //     }
+
+    //     return minVal;
+    // }
+
+    // public int countSum(int[][] grid, int[][] dp, int j, int n, int i) {
+    //     if (j < 0 || j >= n) {
+    //         return (int) Math.pow(10, 9);
+    //     }
+    //     if (i == 0) {
+    //         return grid[0][j];
+    //     }
+
+    //     if (dp[i][j] != Integer.MAX_VALUE) {
+    //         return dp[i][j];
+    //     }
+
+    //     int up = grid[i][j] + countSum(grid, dp, j, n, i - 1);
+    //     int upLeft = grid[i][j] + countSum(grid, dp, j - 1, n, i - 1);
+    //     int upRight = grid[i][j] + countSum(grid, dp, j + 1, n, i - 1);
+
+    //     return dp[i][j] = Math.min(up, Math.min(upLeft, upRight));
+    // }
+
+    // Tabulation Technique
+
+    public int minFallingPathSum(int[][] matrix) {
+        int m = matrix.length;
+        int n = matrix[0].length;
+
+        int[] prev = Arrays.copyOf(matrix[0], n);
+
+        for (int i = 1; i < m; i++) {
+            int[] curr = new int[n];
+            for (int j = 0; j < n; j++) {
+                int up = prev[j];
+                int upLeft = Integer.MAX_VALUE;
+                int upRight = Integer.MAX_VALUE;
+
+                if (j > 0) {
+                    upLeft = prev[j - 1];
+                }
+                if (j < n - 1) {
+                    upRight = prev[j + 1];
+                }
+
+                curr[j] = matrix[i][j] + Math.min(up, Math.min(upLeft, upRight));
+            }
+            prev = curr.clone();
+        }
+
+        int minVal = Integer.MAX_VALUE;
+
+        for (int i = 0; i < n; i++) {
+            minVal = Math.min(minVal, prev[i]);
+        }
+
+        return minVal;
+    }
+}
