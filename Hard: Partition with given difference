@@ -1,0 +1,50 @@
+Question Link: https://www.naukri.com/code360/problems/partitions-with-given-difference_3751628
+
+import java.util.* ;
+import java.io.*; 
+public class Solution {
+	public static int mod = (int) (Math.pow(10,9) + 7);
+	public static int countPartitions(int n, int d, int[] arr) {
+		// Write your code here.
+		int totalSum = 0;
+        for (int i = 0; i < arr.length; i++) {
+            totalSum = totalSum + arr[i];
+        }
+        
+        if ((totalSum - d < 0) || (totalSum - d) % 2 == 1) {
+            return 0;
+        }
+        
+        return helper(arr, (totalSum - d) / 2);
+	}
+	public static int helper(int[] arr, int target) {
+        
+        int n = arr.length;
+        int[][] dp = new int[n][target + 1];
+
+        
+        if (arr[0] == 0) {
+            dp[0][0] = 2;
+        } else {
+            dp[0][0] = 1;
+        }
+        
+        if (arr[0] != 0 && arr[0] <= target) {
+            dp[0][arr[0]] = 1;
+        }
+        
+        for (int i = 1; i < n; i++) {
+            for (int j = 0; j <= target; j++) {
+                int notTaken = dp[i - 1][j];
+                int taken = 0;
+                
+                if (arr[i] <= j) {
+                    taken = dp[i - 1][j - arr[i]];
+                }
+                
+                dp[i][j] = (taken + notTaken) % mod;
+            }
+        }
+        return dp[n - 1][target];
+    }
+}
