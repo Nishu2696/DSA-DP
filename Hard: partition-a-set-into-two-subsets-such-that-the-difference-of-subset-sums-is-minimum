@@ -1,0 +1,42 @@
+Question Link: https://www.naukri.com/code360/problems/partition-a-set-into-two-subsets-such-that-the-difference-of-subset-sums-is-minimum_842494
+
+public class Solution {
+    public static int minSubsetSumDifference(int []nums, int n) {
+        // Write your code here.
+        int total = 0;
+        for (int i = 0; i < nums.length; i++) {
+            total = total + nums[i];
+        }
+        boolean[][] dp = new boolean[n][total+1];
+
+        for (int i = 0; i < n; i++) {
+            dp[i][0] = true;
+        }
+
+        if (nums[0] <= total) {
+            dp[0][total] = true;
+        }
+
+        for (int i = 1; i < n; i++) {
+            for (int j = 1; j <= total; j++) {
+                boolean notTaken = dp[i - 1][j];
+                boolean taken = false;
+                if (nums[i] <= j) {
+                    taken = dp[i - 1][j - nums[i]];
+                }
+                dp[i][j] = notTaken || taken;
+            }
+        }
+
+        int minValue = Integer.MAX_VALUE;
+
+        for (int i = 0; i <= total; i++) {
+            if (dp[n - 1][i]) {
+                int diff = Math.abs(i-(total - i));
+                minValue = Math.min(minValue, diff);
+            }
+        }
+
+        return minValue;
+    }
+}
