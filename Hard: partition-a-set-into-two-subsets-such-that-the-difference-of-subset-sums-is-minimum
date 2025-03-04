@@ -1,5 +1,7 @@
 Question Link: https://www.naukri.com/code360/problems/partition-a-set-into-two-subsets-such-that-the-difference-of-subset-sums-is-minimum_842494
 
+NOTE: This solution will only work if we non-negative numbers in the Array
+
 public class Solution {
     public static int minSubsetSumDifference(int []nums, int n) {
         // Write your code here.
