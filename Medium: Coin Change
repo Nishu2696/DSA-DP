@@ -1,0 +1,63 @@
+Question Link: https://leetcode.com/problems/coin-change/
+
+class Solution {
+    // Memoization Technique
+    // public int coinChange(int[] coins, int amount) {
+    //     int n = coins.length;
+    //     int[][] dp = new int[n][amount + 1];
+    //     for (int i = 0; i < n; i++) {
+    //         Arrays.fill(dp[i], -1);
+    //     }
+    //     int ans = minimumCoins(coins, dp, n - 1, amount);
+
+    //     if (ans >= (int) (Math.pow(10, 9))) {
+    //         return -1;
+    //     }
+    //     return ans;
+    // }
+    // public int minimumCoins(int[] coins, int[][] dp, int i, int target) {
+    //     if (i == 0) {
+    //         if (target % coins[0] == 0) {
+    //             return target / coins[0];
+    //         } else {
+    //             return (int) (Math.pow(10, 9));
+    //         }
+    //     }
+
+    //     if (dp[i][target] != -1) {
+    //         return dp[i][target];
+    //     }
+
+    //     int notTaken = 0 + minimumCoins(coins, dp, i - 1, target);
+    //     int taken = (int) (Math.pow(10, 9));
+
+    //     if (coins[i] <= target) {
+    //         taken = 1 + minimumCoins(coins, dp, i, target - coins[i]);
+    //     }
+
+    //     return dp[i][target] = Math.min(taken, notTaken);
+    // }
+
+    // Tabulation Approach - with space otimization
+
+    public int coinChange(int[] coins, int amount) {
+        int n = coins.length;
+        int[] makeAmount = new int[amount + 1];
+        for (int i = 1; i <= amount; i++) {
+            makeAmount[i] = amount + 1;
+            for (int j = 0; j < n; j++) {
+                if (coins[j] > i) {
+                    continue;
+                }
+                if (makeAmount[i] > makeAmount[i - coins[j]] + 1) {
+                    makeAmount[i] = makeAmount[i - coins[j]] + 1;
+                }
+            }
+        }
+
+        if (makeAmount[amount] == amount + 1) {
+            return -1;
+        }
+        return makeAmount[amount];
+    }
+}
