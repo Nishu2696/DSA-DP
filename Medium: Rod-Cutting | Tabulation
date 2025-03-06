@@ -1,0 +1,34 @@
+Question Link: https://www.geeksforgeeks.org/problems/rod-cutting0840/1
+
+class Solution {
+    public int cutRod(int[] price) {
+        // code here
+        int n = price.length;
+        int[] weight = new int[n];
+        
+        for (int i = 0; i < n; i++) {
+            weight[i] = i + 1;
+        }
+        
+        int[] prev = new int[n + 1];
+        
+        for (int i = weight[0]; i <= n; i++) {
+            prev[i] = ((int) i / weight[0]) * price[0];
+        }
+        
+        for (int i = 1; i < n; i++) {
+            for (int j = 0; j <= n; j++) {
+                int notTaken = prev[j];
+                int taken = Integer.MIN_VALUE;
+                
+                if (weight[i] <= j) {
+                    taken = price[i] + prev[j - weight[i]];
+                }
+                
+                prev[j] = Math.max(notTaken, taken);
+            }
+        }
+        
+        return prev[n];
+    }
+}
