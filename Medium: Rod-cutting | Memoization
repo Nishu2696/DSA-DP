@@ -1,0 +1,41 @@
+Question Link: https://www.geeksforgeeks.org/problems/rod-cutting0840/1
+
+class Solution {
+    public int cutRod(int[] price) {
+        // code here
+        // solution is similar to unbounded knapsack problem
+        // in unbounded knapsack we get weight and val
+        // but in this problem we are getting only price = val
+        // to build our own weight we create an array [1 to n]
+        // rest solution is similar to unbounded knapsack problem
+        int n = price.length;
+        int[] weight = new int[n];
+        int[][] dp = new int[n][n + 1];
+        
+        for (int i = 0; i < n; i++) {
+            weight[i] = i + 1;
+            Arrays.fill(dp[i], -1);
+        }
+        
+        return helper(weight, price, n, dp, n - 1);
+    }
+    
+    public int helper(int[] wt, int[] val, int target, int[][] dp, int i) {
+        if (i == 0) {
+            return ((int) (target / wt[0])) * val[0];
+        }
+        
+        if (dp[i][target] != -1) {
+            return dp[i][target];
+        }
+        
+        int notTaken = helper(wt, val, target, dp, i - 1);
+        int taken = Integer.MIN_VALUE;
+        
+        if (wt[i] <= target) {
+            taken = val[i] + helper(wt, val, target - wt[i], dp, i);
+        }
+        
+        return dp[i][target] = Math.max(notTaken, taken);
+    }
+}
