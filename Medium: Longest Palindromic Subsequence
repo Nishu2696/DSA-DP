@@ -1,0 +1,61 @@
+Question Link: https://leetcode.com/problems/longest-palindromic-subsequence/
+
+class Solution {
+    // Memoization Approach
+    // public int longestPalindromeSubseq(String s) {
+    //     int n = s.length();
+    //     if (n == 0) { 
+    //         return 0;
+    //     }
+    //     int[][] dp = new int[n][n];
+    //     for (int i = 0; i < n; i++) {
+    //         Arrays.fill(dp[i], -1);
+    //     }
+    //     return helper(s, 0, n - 1, dp);
+    // }
+    // public int helper(String s, int i, int j, int[][] dp) {
+    //     if (i == j) {
+    //         return 1;// because assuming the string is from the same index, hence this will be surely added in the palindromic string
+    //     }
+    //     if (i > j) {
+    //         return 0; // the main recursive function started from 0 and ends at n - 1, so not to cross the mid, this if condition is added, and if it crosses we return 0
+    //     }
+
+    //     if (dp[i][j] != -1) {
+    //         return dp[i][j];
+    //     }
+
+    //     if (s.charAt(i) == s.charAt(j)) {
+    //         dp[i][j] = 2 + helper(s, i + 1, j - 1, dp); // 2 is added 1 char i & 1 char j will be a palindromic string.  
+    //         return dp[i][j];
+    //     }
+
+    //     int leftIncrement = helper(s, i + 1, j, dp);
+    //     int rightIncrement = helper(s, i, j - 1, dp);
+    //     dp[i][j] = Math.max(leftIncrement, rightIncrement);
+
+    //     return dp[i][j];
+    // }
+
+    // Tabulation Approach - With space optimization
+
+    public int longestPalindromeSubseq(String s) {
+        String t = new StringBuilder(s).reverse().toString();
+        int n = s.length();
+        int[] prev = new int[n + 1];
+        int[] curr = new int[n + 1];
+
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= n; j++) {
+                if (s.charAt(i - 1) == t.charAt(j - 1)) {
+                    curr[j] = 1 + prev[j - 1];
+                } else {
+                    curr[j] = Math.max(prev[j], curr[j - 1]);
+                }
+            }
+            prev = curr.clone();
+        }
+
+        return prev[n];
+    }
+}
