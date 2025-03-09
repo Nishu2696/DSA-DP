@@ -1,0 +1,63 @@
+QUestion Link: https://leetcode.com/problems/minimum-insertion-steps-to-make-a-string-palindrome/
+
+class Solution {
+    // memoization approach
+    // dp = [
+    //     [-1,-1,-1,-1, 2]
+    //     [-1,-1, *(1+ Math.min(0,0)), *(1+Math.min(1,1)),-1]
+    //     [-1,-1,-1, *(1+Math.min(0, 0)),-1]
+    //     [-1,-1,-1,-1,-1]
+    //     [-1,-1,-1,-1,-1]
+    // ]
+    // public int minInsertions(String s) {
+    //     int n = s.length();
+    //     if (s == null || n == 0) {
+    //         return 0;
+    //     }
+    //     int[][] dp = new int[n][n];
+    //     for (int i = 0; i < n; i++) {
+    //         Arrays.fill(dp[i], -1);
+    //     }
+
+    //     return helper(s, 0, n - 1, dp);
+    // }
+    // public int helper(String s, int i, int j, int[][] dp) {
+    //     if (i >= j) {
+    //         return 0;
+    //     }
+    //     if (dp[i][j] != -1) {
+    //         return dp[i][j];
+    //     }
+    //     if (s.charAt(i) == s.charAt(j)) {
+    //         dp[i][j] = helper(s, i + 1, j - 1, dp);
+    //         return dp[i][j];
+    //     } else {
+    //         dp[i][j] = 1 + Math.min(helper(s, i + 1, j, dp), helper(s, i, j - 1, dp));
+    //         return dp[i][j];
+    //     }
+    // }
+
+    // tabulation approach - with space optimization
+    public int minInsertions(String s) {
+        String s2 = new StringBuilder(s).reverse().toString();
+        int minInsertion = palindromicSubstring(s, s2);
+        return s.length() - minInsertion;
+    }
+    public int palindromicSubstring(String s1, String s2) {
+        int n = s1.length();
+        int[] prev = new int[n + 1];
+        int[] curr = new int[n + 1];
+
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= n; j++) {
+                if (s1.charAt(i - 1) == s2.charAt(j - 1)) {
+                    curr[j] = 1 + prev[j - 1];
+                } else {
+                    curr[j] = Math.max(prev[j], curr[j - 1]);
+                }
+            }
+            prev = curr.clone();
+        }
+        return prev[n];
+    }
+}
