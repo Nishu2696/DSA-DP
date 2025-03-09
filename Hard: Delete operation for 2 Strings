@@ -1,0 +1,75 @@
+Question Link: https://leetcode.com/problems/delete-operation-for-two-strings/
+
+class Solution {
+    // memoization approach
+    // dp = [
+    //     [-1,-1,-1,-1]
+    //     [-1, *(1 + Math.min(1, 1)), 1,-1]
+    //     [-1, *(1 + Math.min(2, 2)), *(1 + Math.min(3, 1)), 1]
+    //     [-1, *(1 + Math.min(3, 3)), *(1 + Math.min(4, 2)), *(1 + math.min(3, 1))]
+    // ]
+    // public int minDistance(String word1, String word2) {
+    //     int m = word1.length();
+    //     int n = word2.length();
+
+    //     int[][] dp = new int[m + 1][n + 1];
+    //     for (int i = 0; i <= m; i++) {
+    //         Arrays.fill(dp[i], -1);
+    //     }
+
+    //     return helper(word1, word2, dp);
+    // }
+    // public int helper(String s1, String s2, int[][] dp) {
+    //     int m = s1.length();
+    //     int n = s2.length();
+
+    //     if (m == 0) {
+    //         return n; // rest of the s2 length will be considered
+    //     }
+    //     if (n == 0) {
+    //         return m; // rest of the s1 length will be considered
+    //     }
+
+    //     if (dp[m][n] != -1) {
+    //         return dp[m][n];
+    //     }
+
+    //     if (s1.charAt(0) == s2.charAt(0)) {
+    //         dp[m][n] = helper(s1.substring(1), s2.substring(1), dp);
+    //         return dp[m][n];
+    //     } else {
+    //         dp[m][n] = 1 + Math.min(helper(s1.substring(1), s2, dp), helper(s1, s2.substring(1), dp));
+    //         return dp[m][n];
+    //     }
+    // }
+
+    // Tabulation approach - with sapce optimization
+
+    public int minDistance(String word1, String word2) {
+        int m = word1.length();
+        int n = word2.length();
+
+        int k = deleteString(word1, word2);
+        return (n - k) + (m - k);
+    }
+    public int deleteString(String s1, String s2) {
+        int m = s1.length();
+        int n = s2.length();
+
+        int[] prev = new int[n + 1];
+        int[] curr = new int[n + 1];
+
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                if (s1.charAt(i - 1) == s2.charAt(j - 1)) {
+                    curr[j] = 1 + prev[j - 1];
+                } else {
+                    curr[j] = Math.max(prev[j], curr[j - 1]);
+                }
+            }
+            prev = curr.clone();
+        }
+
+        return prev[n];
+    }
+}
