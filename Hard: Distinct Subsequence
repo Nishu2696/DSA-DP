@@ -1,0 +1,58 @@
+Question Link: https://leetcode.com/problems/distinct-subsequences/
+
+class Solution {
+    public static int mod = (int)(Math.pow(10,9)) + 7;
+    // memoization technique
+    // public int numDistinct(String s, String t) {
+    //     int n = s.length();
+    //     int m = t.length();
+
+    //     int[][] dp = new int[n][m];
+
+    //     for (int i = 0; i < n; i++) {
+    //         Arrays.fill(dp[i], -1);
+    //     }
+
+    //     return helper(s, t, n - 1, m - 1, dp);
+    // }
+    // public int helper(String s, String t, int i, int j, int[][] dp) {
+    //     if (j < 0) {
+    //         return 1; // j refers to string s2, which means now all the string s1 is  in subsequence
+    //     }
+
+    //     if (i < 0) {
+    //         return 0; // nothing is left of string s1, none can be added as subsequence
+    //     }
+
+    //     if (dp[i][j] != -1) {
+    //         return dp[i][j];
+    //     }
+
+    //     if (s.charAt(i) == t.charAt(j)) {
+    //         int notConsider = helper(s, t, i - 1, j - 1, dp);
+    //         int consider = helper(s, t, i - 1, j, dp);
+
+    //         return dp[i][j] = (notConsider + consider) % mod;
+    //     } else {
+    //         return dp[i][j] = helper(s, t, i - 1, j, dp);
+    //     }     
+    // }
+
+    // tabulation technique: with space optimization
+    public int numDistinct(String s, String t) {
+        int n = s.length();
+        int m = t.length();
+
+        int[] prev = new int[m + 1];
+        prev[0] = 1;
+
+        for (int i = 1; i <= n; i++) {
+            for (int j = m; j >= 1; j--) {
+                if (s.charAt(i - 1) == t.charAt(j - 1)) {
+                    prev[j] = (prev[j - 1] + prev[j]) % mod;
+                }
+            }
+        }
+        return prev[m];
+    }
+}
