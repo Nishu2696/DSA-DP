@@ -1,0 +1,30 @@
+Question Link: https://leetcode.com/problems/word-break/
+
+NOTE: The below solution is not of DP, when revising try it with DP
+
+class Solution {
+    public boolean wordBreak(String s, List<String> wordDict) {
+        Map<String, Boolean> memo = new HashMap<>();
+        Set<String> set = new HashSet<>(wordDict);
+        return dfs(s, memo, set);
+    }
+    public boolean dfs(String s, Map<String, Boolean> memo, Set<String> set) {
+        if (memo.containsKey(s)) {
+            return memo.get(s);
+        }
+        if (set.contains(s)) {
+            return true;
+        }
+
+        for (int i = 1; i < s.length(); i++) {
+            String prefix = s.substring(0, i);
+
+            if (set.contains(prefix) && dfs(s.substring(i), memo, set)) {
+                memo.put(s, true);
+                return true;
+            }
+        }
+        memo.put(s, false);
+        return false;
+    }
+}
