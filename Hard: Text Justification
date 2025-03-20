@@ -1,0 +1,59 @@
+Question Link: https://leetcode.com/problems/text-justification/
+
+class Solution {
+    public List<String> fullJustify(String[] words, int maxWidth) {
+        int[][] costs = new int[words.length][words.length];
+
+        for (int i = 0; i < words.length; i++) {
+            costs[i][i] = maxWidth - words[i].length();
+            for (int j = i + 1; j < words.length; j++) {
+                costs[i][j] = costs[i][j - 1] - words[j].length() - 1; // extra -1 is for space between each words needs to be considered
+            }
+        }
+
+        for (int i = 0; i < words.length; i++) {
+            for (int j = i; j < words.length; j++) {
+                if (costs[i][j] < 0) {
+                    costs[i][j] = Integer.MAX_VALUE;
+                } else {
+                    costs[i][j] = (int)Math.pow(costs[i][j], 2);
+                }
+            }
+        }
+
+        int[] minCost = new int[words.length];
+        int[] result = new int[words.length];
+
+        for (int i = words.length - 1; i >= 0; i--) {
+            minCost[i] = costs[i][words.length - 1];
+            result[i] = words.length;
+
+            for (int j = words.length - 1; j > i; j--) {
+                if (costs[i][j - 1] == Integer.MAX_VALUE) {
+                    continue;
+                }
+                if (minCost[i] > minCost[j] + costs[i][j - 1]) {
+                    minCost[i] = minCost[j] + costs[i][j - 1];
+                    result[i] = j;
+                }
+            }
+        }
+
+        int i = 0;
+        int j;
+
+        List<String> output = new ArrayList<>();
+
+        do {
+            j = result[i];
+            StringBuilder sb = new StringBuilder();
+            for (int k = i; k < j; k++) {
+                sb.append(words[k] + " ");
+            }
+            output.add(sb.toString());
+            i = j;
+        } while (j < words.length);
+
+        return output;
+    }
+}
